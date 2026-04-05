@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>BizPulse Report</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <style>
     /* Reset & Base Setup */
     * {
@@ -13,6 +16,7 @@
       margin: 0;
       padding: 0;
     }
+
     body {
       background-color: #f7f9fc;
       color: #1a202c;
@@ -20,72 +24,97 @@
       font-size: 14px;
       line-height: 1.5;
     }
+
     .page {
       width: 210mm;
       min-height: 297mm;
       padding: 20mm 15mm;
       margin: 0 auto;
       background: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       position: relative;
     }
 
     /* Print settings */
     @media print {
-      body, .page {
+
+      body,
+      .page {
         margin: 0;
         box-shadow: none;
         width: 100%;
       }
+
       .page {
         page-break-after: always;
       }
     }
 
     /* Typography */
-    .font-serif { font-family: 'Instrument Serif', serif; }
-    .text-navy { color: #0A0F1E; }
-    .text-emerald { color: #1D9E75; }
-    .bg-navy { background-color: #0A0F1E; }
-    .bg-emerald { background-color: #1D9E75; }
+    .font-serif {
+      font-family: 'Instrument Serif', serif;
+    }
+
+    .text-navy {
+      color: #0A0F1E;
+    }
+
+    .text-emerald {
+      color: #1D9E75;
+    }
+
+    .bg-navy {
+      background-color: #0A0F1E;
+    }
+
+    .bg-emerald {
+      background-color: #1D9E75;
+    }
 
     /* Cover Page */
     .cover-page {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      height: 257mm; /* Total A4 height minus padding */
+      height: 257mm;
+      /* Total A4 height minus padding */
       background-color: #0A0F1E;
       color: white;
       padding: 40px;
       border-radius: 8px;
     }
+
     .cover-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       padding-bottom: 20px;
     }
+
     .cover-logo {
       font-size: 24px;
       font-weight: 700;
       letter-spacing: 1px;
     }
+
     .cover-date {
       color: #a0aec0;
       font-size: 12px;
     }
+
     .cover-main {
       text-align: center;
       margin-top: auto;
       margin-bottom: auto;
     }
+
     .title {
       font-size: 48px;
       margin-bottom: 20px;
       line-height: 1.1;
     }
+
     .subtitle {
       font-size: 18px;
       color: #a0aec0;
@@ -94,6 +123,7 @@
       margin-left: auto;
       margin-right: auto;
     }
+
     .score-circle {
       width: 200px;
       height: 200px;
@@ -104,14 +134,17 @@
       align-items: center;
       justify-content: center;
       margin: 0 auto;
+
       background: radial-gradient(circle, {{SCORE_COLOR_ALPHA_LOW}} 0%, transparent 70%);
       box-shadow: 0 0 40px {{SCORE_COLOR_ALPHA_HIGH}};
     }
+
     .score-value {
       font-size: 72px;
       line-height: 1;
       color: {{SCORE_COLOR}};
     }
+
     .score-label {
       font-size: 16px;
       font-weight: 600;
@@ -128,6 +161,7 @@
       border-left: 4px solid #1D9E75;
       border-radius: 0 8px 8px 0;
     }
+
     .exec-title {
       font-size: 24px;
       margin-bottom: 15px;
@@ -142,11 +176,13 @@
       margin-top: 50px;
       margin-bottom: 25px;
     }
+
     .priorities-list {
       display: flex;
       flex-direction: column;
       gap: 15px;
     }
+
     .priority-card {
       background: white;
       border: 1px solid #e2e8f0;
@@ -155,6 +191,7 @@
       display: flex;
       gap: 20px;
     }
+
     .priority-rank {
       width: 40px;
       height: 40px;
@@ -167,12 +204,14 @@
       font-size: 20px;
       flex-shrink: 0;
     }
+
     .priority-content h4 {
       font-size: 18px;
       color: #0A0F1E;
       margin-bottom: 8px;
       font-weight: 600;
     }
+
     .priority-content p {
       color: #4a5568;
     }
@@ -185,30 +224,35 @@
       margin-top: 30px;
       page-break-inside: auto;
     }
+
     .module-card {
       border: 1px solid #e2e8f0;
       border-radius: 8px;
       padding: 24px;
       background: white;
       page-break-inside: avoid;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
+
     .module-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 15px;
     }
+
     .module-title {
       font-size: 22px;
       font-weight: 600;
       color: #0A0F1E;
     }
+
     .module-score {
       font-size: 36px;
       color: #1D9E75;
       line-height: 1;
     }
+
     .module-headline {
       font-size: 15px;
       font-style: italic;
@@ -217,6 +261,7 @@
       padding-bottom: 15px;
       border-bottom: 1px dashed #cbd5e0;
     }
+
     .list-title {
       font-size: 14px;
       font-weight: 600;
@@ -225,16 +270,22 @@
       color: #718096;
       margin-bottom: 10px;
     }
-    .module-findings ul, .module-recos ul {
+
+    .module-findings ul,
+    .module-recos ul {
       padding-left: 20px;
       color: #2d3748;
     }
-    .module-findings li, .module-recos li {
+
+    .module-findings li,
+    .module-recos li {
       margin-bottom: 8px;
     }
+
     .module-recos li strong {
       color: #0A0F1E;
     }
+
     .badge {
       display: inline-block;
       padding: 3px 8px;
@@ -245,7 +296,7 @@
       background: #edf2f7;
       color: #4a5568;
     }
-    
+
     .red-flag-box {
       margin-top: 30px;
       background: #fff5f5;
@@ -254,6 +305,7 @@
       padding: 20px;
       border-radius: 4px;
     }
+
     .red-flag-title {
       color: #c53030;
       font-weight: 600;
@@ -263,6 +315,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <div class="page cover-page">
@@ -270,11 +323,12 @@
       <div class="cover-logo">BizPulse Analytics</div>
       <div class="cover-date">{{DATE}}</div>
     </div>
-    
+
     <div class="cover-main">
       <h1 class="title font-serif">Executive Health Report</h1>
-      <p class="subtitle">Comprehensive assessment of operations, financials, and growth readiness based on provided data.</p>
-      
+      <p class="subtitle">Comprehensive assessment of operations, financials, and growth readiness based on provided
+        data.</p>
+
       <div class="score-circle">
         <div class="score-value font-serif">{{OVERALL_SCORE}}</div>
         <div class="score-label">{{HEALTH_LABEL}}</div>
@@ -305,4 +359,5 @@
   </div>
 
 </body>
+
 </html>
