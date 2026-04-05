@@ -107,9 +107,20 @@ async function generatePDF(analysisResult, outputPath = 'report.pdf') {
   html = html.replace('{{OVERALL_SCORE}}', analysisResult.overall_score);
   html = html.replace('{{HEALTH_LABEL}}', analysisResult.health_label);
   html = html.replace('{{EXECUTIVE_SUMMARY}}', analysisResult.executive_summary || '');
-  html = html.replaceAll('{{SCORE_COLOR}}', scoreColor(analysisResult.overall_score));
-  html = html.replace('{{SCORE_COLOR_ALPHA_LOW}}',  scoreColorAlpha(analysisResult.overall_score, 0.1));
-  html = html.replace('{{SCORE_COLOR_ALPHA_HIGH}}', scoreColorAlpha(analysisResult.overall_score, 0.2));
+  
+  const dynamicStyles = `
+    <style>
+      .score-circle {
+        border-color: ${scoreColor(analysisResult.overall_score)};
+        background: radial-gradient(circle, ${scoreColorAlpha(analysisResult.overall_score, 0.1)} 0%, transparent 70%);
+        box-shadow: 0 0 40px ${scoreColorAlpha(analysisResult.overall_score, 0.2)};
+      }
+      .score-value {
+        color: ${scoreColor(analysisResult.overall_score)};
+      }
+    </style>
+  `;
+  html = html.replace('</head>', dynamicStyles + '</head>');
 
   html = html.replace('{{RED_FLAGS_SECTION}}', buildRedFlagsHtml(analysisResult.all_red_flags));
   html = html.replace('{{PRIORITIES_LIST}}', buildPrioritiesHtml(analysisResult.top_3_priorities));
