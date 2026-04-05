@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #0A0F1E;
+  --color-emerald: #1D9E75;
+  --color-emerald-hover: #15805d;
+  --font-serif: 'Instrument Serif', serif;
+  --font-sans: 'Inter', sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-navy);
+    color: white;
+    font-family: var(--font-sans);
+  }
+}

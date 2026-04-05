@@ -1,0 +1,11 @@
+Date,Customer Name,Item Name,Qty,Revenue (₹),Cost (₹),Supplier
+01-Apr-25,Reliance Retail,Widget A,100,150000,105000,Acme Corp
+05-Apr-25,Tata Stores,Widget B,50,80000,55000,Global Supply
+10-Apr-25,Local Kiosk,Widget A,10,15000,10500,Acme Corp
+12-Apr-25,Reliance Retail,Widget C,200,300000,210000,Mega Vendors
+15-Apr-25,Future Group,Widget A,150,225000,157500,Acme Corp
+20-Apr-25,Tata Stores,Widget B,60,95000,66000,Global Supply
+25-Apr-25,Adani Malls,Widget A,300,450000,315000,Acme Corp
+28-Apr-25,Reliance Retail,Widget B,100,160000,110000,Global Supply
+01-May-25,Local Store,Widget C,20,30000,21000,Mega Vendors
+05-May-25,Tata Stores,Widget A,80,120000,84000,Acme Corp
