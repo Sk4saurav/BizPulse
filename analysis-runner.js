@@ -33,7 +33,7 @@ Return ONLY a valid JSON object matching this spec exactly, with NO markdown for
 }`;
 
   const msg = await anthropic.messages.create({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-3-5-sonnet-20241022",
     max_tokens: 1500,
     system: "You return only JSON without any markdown formatting or wrapper.",
     messages: [{ role: "user", content: prompt }]
@@ -78,7 +78,7 @@ Return ONLY a valid JSON object matching this spec exactly, with NO markdown for
 }`;
 
   const msg = await anthropic.messages.create({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-3-5-sonnet-20241022",
     max_tokens: 1500,
     system: "You return only JSON without any markdown formatting.",
     messages: [{ role: "user", content: prompt }]

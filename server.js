@@ -53,7 +53,7 @@ app.use(express.json());
 
 // Set up Redis connection
 const connection = process.env.REDIS_URL 
-  ? new IORedis(process.env.REDIS_URL, { maxRetriesPerRequest: null })
+  ? new IORedis(process.env.REDIS_URL, { maxRetriesPerRequest: null, family: 0, tls: { rejectUnauthorized: false } })
   : {
       host: process.env.REDIS_HOST || '127.0.0.1',
       port: process.env.REDIS_PORT || 6379,
