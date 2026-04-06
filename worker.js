@@ -77,7 +77,7 @@ const worker = new Worker('ReportQueue', async job => {
   }
 }, { 
   connection,
-  concurrency: 2,
+  concurrency: 1,
   removeOnComplete: { count: 500, age: 60 * 60 * 24 }, // keep 500 jobs or 24hrs
   removeOnFail:    { count: 100 }
 });

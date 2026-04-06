@@ -7,13 +7,17 @@ async function getBrowser() {
     _browser = await puppeteer.launch({ 
       headless: "new", 
       executablePath: '/usr/bin/google-chrome-stable',
+      timeout: 60000,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
         '--single-process',
         '--no-zygote',
-        '--disable-gpu'
+        '--disable-gpu',
+        '--memory-pressure-off',
+        '--disable-software-rasterizer',
+        '--window-size=1920,1080'
       ] 
     });
   }
