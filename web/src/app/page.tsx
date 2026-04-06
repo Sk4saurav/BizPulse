@@ -148,17 +148,15 @@ export default function Home() {
       {/* Main interactive area */}
       <div className="w-full max-w-xl bg-[#111827] border border-gray-800 rounded-3xl p-8 shadow-2xl relative z-10 transition-all">
         {jobState === "idle" && (
-          <div 
+          <label 
             className="border-2 border-dashed border-gray-700 rounded-2xl p-12 hover:bg-white/[0.02] hover:border-emerald/50 transition-colors cursor-pointer flex flex-col items-center"
             onDragOver={handleDragOver}
             onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
           >
             <input 
               type="file" 
               className="hidden" 
               accept=".csv,.xlsx,.xls"
-              ref={fileInputRef}
               onChange={(e) => e.target.files && setFile(e.target.files[0])}
             />
             
@@ -175,7 +173,7 @@ export default function Home() {
                 <div className="text-sm text-gray-400 mt-2">Supports .CSV, .XLSX (Tally, Zoho exports) max 5MB</div>
               </>
             )}
-          </div>
+          </label>
         )}
 
         {/* Loading / Progress States */}
