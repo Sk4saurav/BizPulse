@@ -1,28 +1,26 @@
-const Anthropic = require('@anthropic-ai/sdk');
+const { GoogleGenAI } = require('@google/genai');
 require('dotenv').config();
 
 const MODULE_WEIGHTS = { pl:0.30, customers:0.25, ops:0.15, suppliers:0.10, marketing:0.10, investment:0.10 };
 
-let anthropic;
-if (process.env.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_API_KEY.includes('your_api_key_here')) {
-  anthropic = new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY,
+let ai;
+if (process.env.GEMINI_API_KEY && !process.env.GEMINI_API_KEY.includes('your_api_key_here')) {
+  ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY,
   });
 }
 
-
-
-async function callClaude(module, summaryData) {
-  if (!anthropic) {
-    throw new Error('ANTHROPIC_API_KEY is missing. Production mode strictly requires a valid key.');
+async function callAI(module, summaryData) {
+  if (!ai) {
+    throw new Error('GEMINI_API_KEY is missing. Production mode strictly requires a valid API key.');
   }
 
-  console.log(`[Claude AI] Running analysis module: ${module}...`);
+  console.log(`[Gemini AI] Running analysis module: ${module}...`);
   const prompt = `You are a McKinsey-level financial consultant analyzing an Indian SMB. 
 Based on the following data: ${JSON.stringify(summaryData)}
 Analyze the module: ${module}.
 Identify key trends, specific numbers, and deep consultative insights.
-Return ONLY a valid JSON object matching this spec exactly, with NO markdown formatting:
+Return ONLY a valid JSON object matching this spec exactly, with NO formatting:
 {
   "score": <0-100 integer>,
   "grade": "<A-F string>",
@@ -32,14 +30,17 @@ Return ONLY a valid JSON object matching this spec exactly, with NO markdown for
   "red_flags": ["<Red flag 1 if any>"]
 }`;
 
-  const msg = await anthropic.messages.create({
-    model: "claude-3-5-sonnet-20241022",
-    max_tokens: 1500,
-    system: "You return only JSON without any markdown formatting or wrapper.",
-    messages: [{ role: "user", content: prompt }]
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: prompt,
+    config: {
+      systemInstruction: "You return only JSON without any markdown formatting or wrapper.",
+      responseMimeType: "application/json",
+      temperature: 0.2
+    }
   });
 
-  const responseText = msg.content[0].text.trim();
+  const responseText = response.text.trim();
   const cleanedText = responseText.replace(/```json/gi, '').replace(/```/g, '').trim();
   return JSON.parse(cleanedText);
 }
@@ -47,7 +48,7 @@ Return ONLY a valid JSON object matching this spec exactly, with NO markdown for
 // Main safe caller for modules
 async function runModuleSafe(module, summary) {
   try {
-    return await callClaude(module, summary);
+    return await callAI(module, summary);
   } catch (err) {
     console.error(`Module ${module} failed:`, err.message);
     
@@ -59,19 +60,19 @@ async function runModuleSafe(module, summary) {
       headline: "Analysis incomplete — API returned empty response.",
       findings: ["AI analysis was halted due to API rejection.", "Verify API credits.", "Re-upload with complete data for full score."],
       red_flags: [],
-      recommendations: [{ title: "Check API Billing", impact: "high", effort: "low", detail: "The Anthropic key associated with this account ran out of credits." }]
+      recommendations: [{ title: "Check API Billing", impact: "high", effort: "low", detail: "The API key associated with this account ran out of credits." }]
     };
   }
 }
 
-async function callClaudeAggregator(moduleResults) {
-  if (!anthropic) {
-    throw new Error('ANTHROPIC_API_KEY is missing. Production mode strictly requires a valid key.');
+async function callAIAggregator(moduleResults) {
+  if (!ai) {
+    throw new Error('GEMINI_API_KEY is missing. Production mode strictly requires a valid key.');
   }
 
-  console.log(`[Claude AI] Aggregating final results...`);
+  console.log(`[Gemini AI] Aggregating final results...`);
   const prompt = `Based on the following module analyses: ${JSON.stringify(moduleResults)}, provide an executive synthesis.
-Return ONLY a valid JSON object matching this spec exactly, with NO markdown formatting:
+Return ONLY a valid JSON object matching this spec exactly, with NO formatting:
 {
   "executive_summary": "<Overall synthesis...>",
   "biggest_strength": "<The best thing...>",
@@ -81,14 +82,17 @@ Return ONLY a valid JSON object matching this spec exactly, with NO markdown for
   ]
 }`;
 
-  const msg = await anthropic.messages.create({
-    model: "claude-3-5-sonnet-20241022",
-    max_tokens: 1500,
-    system: "You return only JSON without any markdown formatting.",
-    messages: [{ role: "user", content: prompt }]
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: prompt,
+    config: {
+      systemInstruction: "You return only JSON without any markdown formatting.",
+      responseMimeType: "application/json",
+      temperature: 0.2
+    }
   });
 
-  const responseText = msg.content[0].text.trim();
+  const responseText = response.text.trim();
   const cleanedText = responseText.replace(/```json/gi, '').replace(/```/g, '').trim();
   return JSON.parse(cleanedText);
 }
@@ -105,7 +109,7 @@ async function runAggregator(moduleResults, summary) {
 
   let aiAggregation = {};
   try {
-    aiAggregation = await callClaudeAggregator(moduleResults);
+    aiAggregation = await callAIAggregator(moduleResults);
   } catch (err) {
     console.error('Aggregator failed, falling back to basic.', err);
     aiAggregation = {
@@ -155,6 +159,6 @@ async function runFullAnalysis(summary) {
 
 module.exports = {
   runFullAnalysis,
-  runModuleSafe, // Exported for unit testing
-  runAggregator  // Exported for unit testing
+  runModuleSafe,
+  runAggregator
 };
