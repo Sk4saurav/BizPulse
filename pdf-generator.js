@@ -4,9 +4,11 @@ const puppeteer = require('puppeteer');
 let _browser;
 async function getBrowser() {
   if (!_browser || !_browser.connected) {
-    _browser = await puppeteer.launch({ 
+    const linuxChrome = '/usr/bin/google-chrome-stable';
+    const hasLinuxChrome = fs.existsSync(linuxChrome);
+
+    const launchOpts = { 
       headless: "new", 
-      executablePath: '/usr/bin/google-chrome-stable',
       timeout: 60000,
       args: [
         '--no-sandbox',
@@ -19,7 +21,13 @@ async function getBrowser() {
         '--disable-software-rasterizer',
         '--window-size=1920,1080'
       ] 
-    });
+    };
+
+    if (hasLinuxChrome) {
+      launchOpts.executablePath = linuxChrome;
+    }
+
+    _browser = await puppeteer.launch(launchOpts);
   }
   return _browser;
 }
